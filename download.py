@@ -2,11 +2,15 @@ import os
 import re
 import requests
 import time
+import asyncio
 from telegram import Update
 from telegram.ext import Application, MessageHandler, filters, ContextTypes
 
 # ========== CONFIG ==========
-BOT_TOKEN = "8338000174:AAG3kVcTAdg-8FO248wV86ZuJ143MgsJwVI"
+BOT_TOKEN = os.environ.get("BOT_TOKEN")
+if not BOT_TOKEN:
+    raise ValueError("BOT_TOKEN environment variable not set!")
+
 API_URL = "https://instagram-info-and-downloader.vercel.app/info"
 
 # ========== API CALL ==========
@@ -71,11 +75,11 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
             os.remove(filename)
 
 # ========== MAIN ==========
-def main():
+async def main():
     app = Application.builder().token(BOT_TOKEN).build()
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
     print("💀 FUCK 🖕 OFF 📴")
-    app.run_polling()
+    await app.run_polling()
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())
